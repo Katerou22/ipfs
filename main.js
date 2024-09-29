@@ -7,7 +7,7 @@ import fileupload from 'express-fileupload'
 import express from 'express'
 
 const app = express()
-const port = 3000
+const port = 3021
 app.use(fileupload());
 
 // Create the Helia node
