@@ -13,6 +13,8 @@
   "dependencies": {
     "@helia/unixfs": "^3.0.7",
     "blockstore-core": "^5.0.2",
+    "express": "^4.21.0",
+    "express-fileupload": "^1.5.1",
     "helia": "^4.2.6"
   }
 }
