@@ -76,7 +76,7 @@ app.route('/upload').post(async function (req, res, next) {
 });
 
 
-app.route('/download/:id').post(async function (req, res, next) {
+app.route('/download/:id').get(async function (req, res, next) {
 
     const id = req.params.id
 
