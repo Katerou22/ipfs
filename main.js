@@ -1,10 +1,10 @@
 import {createHelia} from 'helia'
 import {unixfs} from '@helia/unixfs'
 import {promises as fs} from 'fs' // Import file system promises API
-import path from 'path' // Import path module to resolve file paths
 import {CID} from 'multiformats/cid'
 import fileupload from 'express-fileupload'
 import express from 'express'
+import {fileTypeFromBuffer} from 'file-type'; // Default import
 
 const app = express()
 const port = 3021
@@ -37,22 +37,21 @@ async function download(id) {
     const cid = CID.parse(id)
 
     const file = await ufs.cat(cid)
+    console.log('Wait ...')
 
     const fileChunks = []
     for await (const chunk of file) {
         fileChunks.push(chunk)
     }
 
-    console.log('Wait ...')
 
     // Combine all chunks into a single buffer
-    const fileContent = Buffer.concat(fileChunks)
-
-    // Write the file to disk (optional)
-    await fs.writeFile(id, fileContent)
+    //
+    // // Write the file to disk (optional)
+    // await fs.writeFile(id, fileContent)
     console.log('Finished')
 
-    return fileContent
+    return Buffer.concat(fileChunks)
 }
 
 // await upload();
@@ -80,8 +79,16 @@ app.route('/download/:id').get(async function (req, res, next) {
 
     const id = req.params.id
 
-    return await download(id);
+    const fileContent = await download(id)
 
+    // const fileContent = await fs.readFile(id);
+
+    const fileType = await fileTypeFromBuffer(fileContent);
+
+
+    // // Set the Content-Type header to the MIME type
+    await res.setHeader('Content-Type', fileType.mime);
+    return res.send(fileContent)
 
     // return res.download(id)
 });
