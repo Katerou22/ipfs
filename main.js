@@ -52,7 +52,7 @@ async function download(id) {
     await fs.writeFile(id, fileContent)
     console.log('Finished')
 
-    return 'OKay'
+    return fileContent
 }
 
 // await upload();
@@ -80,10 +80,10 @@ app.route('/download/:id').get(async function (req, res, next) {
 
     const id = req.params.id
 
-    await download(id);
+    return await download(id);
 
 
-    return res.download(id)
+    // return res.download(id)
 });
 
 app.listen(port, () => {
